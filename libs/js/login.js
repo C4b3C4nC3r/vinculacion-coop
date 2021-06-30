@@ -619,14 +619,20 @@ $('#formulario_detalle_pedido').ready(darDetallePedido);
     //console.log('submiting');
     //objeto para conservar los datos
     const postData={
-      id_material:$('#id_material').val(),
+      id_material:$('#id_material').attr('id_material_db'),
       cantidad:$('#cantidad').val()
     };
     $.post(url,postData,function (response) {
+      $('#response').html(response);        
+      
+      if (response.length==0) {
+        $('#id_material').val('');//canpo
+        $('#cantidad').val('');//comap
+  
+      }
+      
       //console.log(response);
       //$('.detallePedido').hide();//ocultar el body antiguo
-      $('#id_material').val('');//canpo
-      $('#cantidad').val('');//comap
       //$('#valor').val('');//campo
       darDetalleSalida();
       enabled();
@@ -666,7 +672,7 @@ $('#formulario_detalle_pedido').ready(darDetallePedido);
           </tr>
           `
         });
-        $('#tbody').html(template);
+        $('#tbodySalida').html(template);
         //impuesto();
       }
     });
@@ -1045,23 +1051,33 @@ $('#formulario_detalle_pedido').ready(darDetallePedido);
 
             detalles.forEach(detalle => {
             template+=`
-              <tr idmaterial=${detalle.id_material} datos=${detalle.producto} >
-                <td >
-                  <b class="botonSelector" href="#"> ${detalle.codigo_material}-${detalle.producto} </b>            
+              <tr idmaterial="${detalle.id_material}" datos="${detalle.producto}" >
+                <td>
+                   ${detalle.codigo_material}-${detalle.producto}            
                 </td>
+                <td >
+                  <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" class="botonSelector btn btn-outline-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg>
+                  </button>
+                </td>
+                
               </tr>
             `
             });
-
+            //data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Registro" class="btn btn-outline-secondary "
             $('#list-busqueda').html(template);
 
-            //console.log(response);
+            //console.log(template);
           }
         });
         $(document).on('click','.botonSelector',function() {
           let element =$(this)[0].parentElement.parentElement;
           let id_material=$(element).attr('idmaterial');
           let datos=$(element).attr('datos');
+          console.log(datos);
           $('#id_material').attr('id_material_db',id_material);
           $('#id_material').val(datos);
           $('#list-busqueda').hide();

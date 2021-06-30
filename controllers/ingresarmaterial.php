@@ -7,19 +7,19 @@ class IngresarMaterial extends Controlador //se extiende al controlador en libs/
   {
     parent::__construct();
     $this->vista->mensaje="";//variable mensaje
-    $this->vista->ingresarmaterialmap= [];//para el proveedor
-  //  $this->vista->detalleingresomap= [];//para la tabla de detalle_ingreso
-    $this->vista->materialmap= [];//para la tabla de detalle_ingreso
+    $this->vista->proveedormap= [];//para el proveedor
+    //$this->vista->detalleingresomap= [];//para la tabla de detalle_ingreso
+    //$this->vista->materialmap= [];//para la tabla de detalle_ingreso
 
   }
   //FUNCIOND RENDER
   function render()
   {
 
-    $ingresarmateriales=$this->modelo->foraneaKey();//funcion SELECT MAP
-    $this->vista->ingresarmaterialmap=$ingresarmateriales;//map
-    $materiales=$this->modelo->foraneaKeyMaterial();//funcion SELECT MAP
-    $this->vista->materialmap=$materiales;//map
+    $proveedores=$this->modelo->foraneaKey();//funcion SELECT MAP
+    $this->vista->proveedormap=$proveedores;//map
+    //$materiales=$this->modelo->foraneaKeyMaterial();//funcion SELECT MAP
+    //$this->vista->materialmap=$materiales;//map
     $this->vista->render('material/ingresarmaterial');//ruta
   }
   //FUNCION PARA INSERT EN INGRESO_MATERIAKL
@@ -60,7 +60,7 @@ class IngresarMaterial extends Controlador //se extiende al controlador en libs/
           }else{
             ?>
             <div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                <strong>Se Ha Detallado</strong> Has mandado doble click :V
+                <strong>Se Ha Detallado</strong> Has mandado doble click...
                 <a href='<?php echo $url ?>'> Revisar los Ingresos de los Materiales</a>
             </div>
             <?php
@@ -118,6 +118,8 @@ class IngresarMaterial extends Controlador //se extiende al controlador en libs/
 
   function detalle()//FUNCION PARA USAR LA TABLA TEMPORAL
   {
+    $url=constant('URL').'consultaringresarmaterial';//ruta
+
       if (!empty($_POST['id_material'])&&!empty($_POST['valor'])&&!empty($_POST['cantidad'])) {
         session_start();
         $id_usuario=$_SESSION['id_usuario'];

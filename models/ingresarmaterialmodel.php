@@ -47,33 +47,7 @@ class IngresarMaterialModel extends Modelo//extiende a modelo
       return [];//nofunciona
     }
   }
-  //==============================================================================================================
-  //==============================================================================================================
-  //==============================================================================================================
-  public function foraneaKeyMaterial()//foranea key para el detalle_ingreso->
-  {
-    $items=[];
-    try {
-      $consulta=$this->db->connect()->query("SELECT * FROM material WHERE estado='activo'");//consulta sencilla
-      while ($row=$consulta->fetch()) {//while, la fila que contiene al array que tare el fetch al vincularse con la consulta
-        $item= new MaterialMap();//objeto
-        //valores del array<-$row
-        $item->id_material=$row['id_material'];//propiedades
-        //$item->ruc=$row['ruc'];
-        $item->producto=$row['producto'];
-        //$item->telefono=$row['telefono'];
-        //$item->correo=$row['correo'];
-        //$item->direccion=$row['direccion'];
-        //ingresar en un arreglo un nuevo valor
-        array_push($items,$item);//
-      }
-      return $items;//sifunciona
-    } catch (PDOException $e) {//excepciones pero de PDO
-      return [];//nofunciona
-    }
-  }
-
-
+  
   //==============================================================================================================
   //=========================FUNCIONES PARA LA TABLA INGRESO_MATERIAL-SELECT=======================================
   //==============================================================================================================

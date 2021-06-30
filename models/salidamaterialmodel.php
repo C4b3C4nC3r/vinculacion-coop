@@ -44,32 +44,7 @@ class SalidaMaterialModel extends Modelo//extiende a modelo
       return [];//nofunciona
     }
   }
-  //==============================================================================================================
-  //==============================================================================================================
-  //==============================================================================================================
-  public function foraneaKeyMaterial()//foranea key para el detalle_ingreso->
-  {
-    $items=[];
-    try {
-      $consulta=$this->db->connect()->query("SELECT * FROM material WHERE estado='activo'");//consulta sencilla
-      while ($row=$consulta->fetch()) {//while, la fila que contiene al array que tare el fetch al vincularse con la consulta
-        $item= new MaterialMap();//objeto
-        //valores del array<-$row
-        $item->id_material=$row['id_material'];//propiedades
-        //$item->ruc=$row['ruc'];
-        $item->producto=$row['producto'];
-        $item->codigo_material=$row['codigo_material'];
-        //$item->telefono=$row['telefono'];
-        //$item->correo=$row['correo'];
-        //$item->direccion=$row['direccion'];
-        //ingresar en un arreglo un nuevo valor
-        array_push($items,$item);//
-      }
-      return $items;//sifunciona
-    } catch (PDOException $e) {//excepciones pero de PDO
-      return [];//nofunciona
-    }
-  }
+
 
   //==============================================================================================================
   //==============================================================================================================
@@ -156,19 +131,70 @@ class SalidaMaterialModel extends Modelo//extiende a modelo
       return [];
     }
   }
+  //==============================================================================================================
+  //=========================FUNCIONES PARA LA TABLA MATERIAL-SELECT=======================================
+  //==============================================================================================================
+  public function confirmStockMaterial($datos)
+  {
+    $consulta=$this->db->connect()->prepare("SELECT * FROM material WHERE id_material=:id_material AND stock>=:stock");
+    try {
+      $consulta->execute(['id_material'=>$datos['id_material'],'stock'=>$datos['stock']]);
 
+      if($row=$consulta->fetch()){
+        if(!empty($row['id_material']) && $row['id_material']>0){
+          return true;//hay stock
+        }else{
+          return false;//no hay
+        }
+      }  
+
+    } catch (PDOException $e) {
+      return false;
+    }
+  }
+  //==============================================================================================================
+  //=========================FUNCIONES PARA LA TABLA MATERIAL-SELECT=======================================
+  //==============================================================================================================
+  public function confirmRepetirTemp($datos)
+  {
+    $stock=0;
+    $consulta=$this->db->connect()->prepare("SELECT * FROM temporal_salida WHERE id_material=:id_material AND id_usuario=:id_usuario");
+    try {
+      $consulta->execute(['id_material'=>$datos['id_material'],'id_usuario'=>$datos['id_usuario']]);
+      while($row=$consulta->fetch()){
+        $stock=$stock+$row['cantidad'];
+      }
+      if ($this->confirmStockMaterial(['id_material'=>$datos['id_material'],'stock'=>$stock+$datos['stock']])) {
+        return true;
+      }else{
+        return false;
+      }
+    } catch (PDOException $e) {
+      return false;
+    }
+  }
   //==============================================================================================================
   //=========================FUNCIONES PARA LA TABLA TEMPORAL-INSERT==============================================
   //==============================================================================================================
 
   public function llenarDatosTablaTemporal($items){
-    $consulta=$this->db->connect()->prepare("INSERT INTO temporal_salida (id_material,id_usuario,cantidad)VALUES(:id_material,:id_usuario,:cantidad)");
-    try {
-      $consulta->execute(['id_material'=>$items['id_material'],'id_usuario'=>$items['id_usuario'],'cantidad'=>$items['cantidad']]);
-      return true;
-    } catch (PDOException $e) {
+    if ($this->confirmStockMaterial(['id_material'=>$items['id_material'],'stock'=>$items['cantidad']])) {  
+      if ($this->confirmRepetirTemp(['id_material'=>$items['id_material'],'id_usuario'=>$items['id_usuario'],'stock'=>$items['cantidad']])) {  
+      
+        $consulta=$this->db->connect()->prepare("INSERT INTO temporal_salida (id_material,id_usuario,cantidad)VALUES(:id_material,:id_usuario,:cantidad)");
+        try {
+          $consulta->execute(['id_material'=>$items['id_material'],'id_usuario'=>$items['id_usuario'],'cantidad'=>$items['cantidad']]);
+          return true;
+        } catch (PDOException $e) {
+          return false;
+        }
+      }else{
+        return false;
+      }
+    }else{
       return false;
     }
+
   }
   //==============================================================================================================
   //==============FUNCION PARA DETALLE_INGRESO INSERT==============================================================
@@ -229,7 +255,7 @@ class SalidaMaterialModel extends Modelo//extiende a modelo
         if ($row['stock']<$limite) {
           return false;
         }else{
-          if ($row['stock']>$items['stock']) {
+          if ($row['stock']>=$items['stock']) {
             // code...
             $stock=$row['stock']-$items['stock'];
             //update

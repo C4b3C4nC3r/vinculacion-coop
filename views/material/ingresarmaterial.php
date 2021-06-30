@@ -39,12 +39,12 @@
     <div id="response">
 
     </div>
-  <form id="formulario_ingreso">
+  <form autocomplete="off" id="formulario_ingreso">
     <div class="form-row">
       <!--numero_factura-->
       <div class="form-group col-md-4" id="formulario_numerofactura">
         <label for="numero_factura">N° Factura</label>
-        <input title="Agrege el detalle" name="numero_factura" type="text"   class="form-control" id="numero_factura" required>
+        <input  title="Agrege el detalle" name="numero_factura" type="text"   class="form-control" id="numero_factura" required>
         <div id="alert">
 
         </div>
@@ -56,7 +56,7 @@
           <option value="">Elija El Proveedor</option>
           <!--Solo se Hace una funion... que estese en el mapProveedor-->
           <?php
-          foreach ($this->ingresarmaterialmap as $row){
+          foreach ($this->proveedormap as $row){
             $obj = new ProveedorMap();
             $obj=$row;
            ?>

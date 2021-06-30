@@ -23,21 +23,20 @@ DETALLE_INGRESO
     <!--Formulario para el ingreso de detalle-->
     <tr id="formulariorow" style="text-align:center;">
 
-      <form id="formulario_detalle_salida">
+      <form autocomplete="off" id="formulario_detalle_salida">
 
       <td>
-        <!--ID_MATERIAL-->
-        <select autofocus name="id_material" id="id_material" class="form-control" required>
-          <option value="">Elija El Material</option>
-          <!--Solo se Hace una funion... que estese en el mapProveedor-->
-          <?php
-          foreach ($this->materialmap as $row) {
-            $obj = new MaterialMap();
-            $obj = $row;
-          ?>
-            <option value="<?php echo $obj->id_material ?>"><?php echo $obj->codigo_material ?>-<?php echo $obj->producto; ?></option>
-          <?php } ?>
-        </select>
+      <style media="screen">
+          ::placeholder{
+            font-size: 9.5px;
+          }
+        </style>
+        <!--Material-->
+        <input placeholder="Ingrese el Codigo o el Nombre del Material" name="material" type="text" class="form-control" id="id_material" required>
+        <div id="list-busqueda">
+          
+        </div>
+          
       </td>
       <td>
         <!--Cantidad-->

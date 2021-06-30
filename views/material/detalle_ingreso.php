@@ -25,7 +25,7 @@ DETALLE_INGRESO
     <!--Formulario para el ingreso de detalle-->
     <tr id="formulario_row" style="text-align:center;">
 
-      <form id="formulario_detalle_ingreso">
+      <form autocomplete="off" id="formulario_detalle_ingreso">
 
       <td>
         <style media="screen">

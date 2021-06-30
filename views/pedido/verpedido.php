@@ -63,7 +63,12 @@ $url = constant('URL') . "consultarpedido"; //ruta para enviarle a la vista de v
             </tr>
           <?php } ?>
           <tr style="text-align: center;">
-            <td colspan="2"></td>
+            <td colspan="2">
+              <b> Comentario:</b>
+             <p>
+               <?php echo $this->pedido->comentario ?>             
+             </p> 
+            </td>
             <td class="border-primary">
               <b>
                 Total:

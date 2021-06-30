@@ -9,7 +9,6 @@ class SalidaMaterial extends Controlador //se extiende al controlador en libs/co
     $this->vista->mensaje="";//variable mensaje
     $this->vista->sociomap= [];//para el proveedor
     $this->vista->detallematerialmap= [];//para la tabla de detalle_ingreso
-    $this->vista->materialmap= [];//para la tabla de detalle_ingreso
     $this->vista->pedidomap= [];//para la tabla de detalle_ingreso
 
   }
@@ -19,8 +18,7 @@ class SalidaMaterial extends Controlador //se extiende al controlador en libs/co
 
     $socios=$this->modelo->foraneaKey();//funcion SELECT MAP
     $this->vista->sociomap=$socios;//map
-    $materiales=$this->modelo->foraneaKeyMaterial();//funcion SELECT MAP
-    $this->vista->materialmap=$materiales;//map
+    
     $pedidos=$this->modelo->foraneaKeyPedido();//funcion SELECT MAP
     $this->vista->pedidomap=$pedidos;
     $this->vista->render('material/salidamaterial');//ruta
@@ -105,20 +103,18 @@ class SalidaMaterial extends Controlador //se extiende al controlador en libs/co
 
   function detalle()//FUNCION PARA USAR LA TABLA TEMPORAL
   {
-      if (!empty($_POST['id_material'])&&!empty($_POST['cantidad'])) {
         session_start();
         $id_usuario=$_SESSION['id_usuario'];
         //INSERTAMOS VALORES PARA LA TABLA TEMPORAL
         if ($this->modelo->llenarDatosTablaTemporal(['id_material'=>$_POST['id_material'],'id_usuario'=>$id_usuario,'cantidad'=>$_POST['cantidad']])) {//para ingresar a la tabal tempral
-          $this->renderSalida();
         }else{
           ?>
           <div class='alert alert-danger alert-dismissible fade show' role='alert'>
-              <strong>ERROR</strong> Errror en ingresar el detalle
+              <strong>No Stock</strong> no hay stock suficiente, agrege por favor
           </div>
           <?php
         }
-      }
+      
   }
   //CRUD PARA TEMPORAL
   function eliminado()
