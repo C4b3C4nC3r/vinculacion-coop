@@ -6,7 +6,7 @@ https://www.youtube.com/watch?v=GeCNShiLdpc&t=5354s->hacer esto.....
 DETALLE_INGRESO
 -->
 
-<div class="table-responsive col-12">
+<div class="table-responsive">
   <table class="table table-bordered order-table" id="dataTable" cellspacing="0">
     <thead>
       <tr style="text-align: center;">

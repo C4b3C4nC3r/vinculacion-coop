@@ -42,7 +42,7 @@ class TareaModel extends Modelo//extiende a modelo
   {
     $items=[];
     try {
-      $consulta=$this->db->connect()->query("SELECT p.`id_pedido`,c.`nombre` FROM pedido p, cliente c WHERE p.`id_cliente`=c.`id_cliente` AND estado='activo'");//consulta sencilla
+      $consulta=$this->db->connect()->query("SELECT p.`id_pedido`,c.`nombre` FROM pedido p, cliente c WHERE p.`id_cliente`=c.`id_cliente` AND p.`estado`='activo'");//consulta sencilla
       while ($row=$consulta->fetch()) {//while, la fila que contiene al array que tare el fetch al vincularse con la consulta
         $item= new PedidoMap();//objeto
         $item->id_pedido=$row['id_pedido'];//propiedades
@@ -54,7 +54,29 @@ class TareaModel extends Modelo//extiende a modelo
       return [];//nofunciona
     }
   }
-
+  //==============================================================================================================
+  //==============================================================================================================
+  //==============================================================================================================
+  public function foraneaKeyProducto()//foranea key para el detalle_ingreso->
+  {
+    $items=[];
+    try {
+      $consulta=$this->db->connect()->query("SELECT * FROM producto WHERE estado='activo'");//consulta sencilla
+      while ($row=$consulta->fetch()) {//while, la fila que contiene al array que tare el fetch al vincularse con la consulta
+        $item= new ProductoMap();//objeto
+        //valores del array<-$row
+        $item->id_producto=$row['id_producto'];//propiedades
+        //$item->ruc=$row['ruc'];
+        $item->producto=$row['producto'];
+        $item->precio=$row['precio'];
+        //ingresar en un arreglo un nuevo valor
+        array_push($items,$item);//
+      }
+      return $items;//sifunciona
+    } catch (PDOException $e) {//excepciones pero de PDO
+      return [];//nofunciona
+    }
+  }
 
   public function extraerDatosTablaTemporal(){//SELECT DE LA TABLA TEMPORAL
     session_start();

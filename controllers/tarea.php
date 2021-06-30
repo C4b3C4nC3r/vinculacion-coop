@@ -8,7 +8,7 @@ class Tarea extends Controlador //se extiende al controlador en libs/controller
     parent::__construct();
     $this->vista->mensaje="";//variable mensaje
     $this->vista->sociomap= [];//para el proveedor
-  //  $this->vista->detalletareamap= [];//para la tabla de detalle_ingreso
+    $this->vista->productomap= [];//para la tabla de detalle_ingreso
     $this->vista->pedidomap= [];//para la tabla de detalle_ingreso
 
   }
@@ -19,6 +19,8 @@ class Tarea extends Controlador //se extiende al controlador en libs/controller
     $this->vista->sociomap=$socios;//map
     $pedidos=$this->modelo->foraneaKeyPedido();//funcion SELECT MAP
     $this->vista->pedidomap=$pedidos;//map
+    $productos=$this->modelo->foraneaKeyProducto();//funcion SELECT MAP
+    $this->vista->productomap=$productos;//map
     $this->vista->render('tarea/index');//ruta
   }
   function rendertarea()

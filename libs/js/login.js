@@ -568,6 +568,145 @@ $('#formulario_detalle_pedido').ready(darDetallePedido);
       });
     }
   }//fin
+  //=================================================================
+  //FORMULARIO DE TAREA
+
+//mostrar tabla
+$('#formulario_detalle_tarea').ready(darDetallePedido); 
+
+  $('#formulario_tarea').submit(function(e) {
+    e.preventDefault();
+    let n=$('#tbodyTarea tr').length;
+    if (n!=0) {
+      const url='http://localhost/coop/tarea/agregarTarea';
+      //console.log('submiting');
+      //objeto para conservar los datos
+      const postData={
+        id_socio:$('#id_socio').val(),
+        fecha_asignacion:$('#fecha_asignacion').val(),
+        fecha_entrega:$('#fecha_entrega').val(),
+        id_pedido:$('#id_pedido').val(),
+        };
+
+      $.post(url,postData,function (response) {
+        //console.log(response);
+        $('#formulario_tarea').trigger('reset');
+        //se debe d eocultar el body que corresponde al detalleIngreso
+        //$('.detalleIngreso').hide();
+        darDetalleTarea();
+        $('#response').html(response);
+        disabled();
+      });
+    }else{
+      let template=`
+      <div class='alert alert-warning alert-dismissible fade show' role='alert'>
+          <strong>Falta Detalle</strong> Llene el Detalle de la tarea Porfavor
+      </div>
+      `
+      $('#response').html(template);
+    }
+  });//funcion guaradar info de formulario_ingreso
+  $('#botonCancelarTarea').click(cancelarDetalleTarea);//cancelar
+
+//mostrar tabla
+  //DETALLE PEDIDO
+  $('#formulario_detalle_tarea').submit(function(e) {
+    const url='http://localhost/coop/tarea/detalle';
+    //$('#response').hide();
+    e.preventDefault();
+    //console.log('submiting');
+    //objeto para conservar los datos
+    const postData={
+      id_producto:$('#id_producto').val(),
+      cantidad:$('#cantidad').val()
+    };
+    $.post(url,postData,function (response) {
+      //console.log(response);
+      //$('.detallePedido').hide();//ocultar el body antiguo
+      $('#id_producto').val('');//canpo
+      $('#cantidad').val('');//comap
+      //$('#valor').val('');//campo
+      darDetalleTarea();
+      enabled();
+    });
+  });
+  //FUNCIONES NECESARIOAS
+  //fun darDetallePedido(0)
+  function darDetalleTarea() {
+
+    const url='http://localhost/coop/tarea/renderTarea';
+    $.ajax({
+      url:url,
+      type:'GET',
+      success: function(response) {
+        let detalles=JSON.parse(response);
+        let template='';
+        //LLENAR DATOS CORRESPONDIENTES
+        //IMPRIMIR LAS FILAS
+        detalles.forEach(detalle => {
+          //plantilla
+          template+=`
+          <tr tareaid="${detalle.id_temporal}" style="text-align:center;">
+            <td>
+              <input type="text" class="form-control"  value="${detalle.producto}" disabled required>
+            </td>
+            <td>
+              <input type="text" name="cantidad" class="form-control" value="${detalle.cantidad}" disabled>
+            </td>
+            <td>
+              <a  data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Este Registro" class="botonEliminarDetalleTarea btn btn-outline-primary "  name="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                </svg>
+              </a>
+            </td>
+          </tr>
+          `
+        });
+        $('#tbodyTarea').html(template);
+      }
+    });
+  }
+
+  //boton eliminar una fila
+  $(document).on('click','.botonEliminarDetalleTarea',function() {
+    let element =$(this)[0].parentElement.parentElement;
+    let id_temporal=$(element).attr('tareaid');
+    eliminadoDetalleTarea(id_temporal);
+  });
+
+  //cancelarDetallePedido
+  function cancelarDetalleTarea() {
+    if (confirm('esta seguro de cancelar esta tarea?')) {
+      const url='http://localhost/coop/tarea/cancelado';
+      $.ajax({
+      url:url,
+      type:'GET',
+      success: function(response) {
+        $('#response').html(response);
+        darDetalleTarea();
+        disabledFooter();
+
+      }
+    });
+    }
+  }//fin
+
+  //eliminadoDetallePedido
+  function eliminadoDetalleTarea(id) {
+    if (confirm('esta seguro de cancelar este ingreso?')) {
+      const url='http://localhost/coop/tarea/eliminado';
+      const data={
+        id_temporal: id
+      }
+      $.post(url,data,function(response) {
+        $('#response').html(response);
+        darDetalleTarea();
+      });
+    }
+  }//fin
+
 
   //=============================================================================
   //mostrar tabla
@@ -611,7 +750,7 @@ $('#formulario_detalle_pedido').ready(darDetallePedido);
   $('#botonCancelarSalida').click(cancelarDetalleSalida);//cancelar
 
 //mostrar tabla
-  //DETALLE PEDIDO
+  //DETALLE SALIDA
   $('#formulario_detalle_salida').submit(function(e) {
     const url='http://localhost/coop/salidamaterial/detalle';
     //$('#response').hide();

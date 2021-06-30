@@ -1,11 +1,11 @@
 <?php
 
 
-class ConsultarPedido extends Controlador //se extiende al controlador en libs/controller
+class ConsultarTarea extends Controlador //se extiende al controlador en libs/controller
 {
   /*
     ==========================================================
-     FUNCION CONSTRUCTOR LLAMA AL PARIENTE Y VISTA DEL PEDIDO 
+     FUNCION CONSTRUCTOR LLAMA AL PARIENTE Y VISTA DEL tarea 
     ==========================================================
   */
   //constructor
@@ -14,7 +14,7 @@ class ConsultarPedido extends Controlador //se extiende al controlador en libs/c
     // llamamos al pariente __construct
     parent::__construct();
     //array en vista con el objeto materialmap (Class MaterialMap)
-    $this->vista->pedidomap= [];
+    $this->vista->tareamap= [];
   }
   /*
     ================================================================================
@@ -25,22 +25,22 @@ class ConsultarPedido extends Controlador //se extiende al controlador en libs/c
   function render()
   {
     //var = este modelo->su funcion con parametros vacios
-    $pedidos=$this->modelo->darPedido();
+    $tareas=$this->modelo->darTarea();
     //esta vista->objeto materialmap= var
-    $this->vista->pedidomap=$pedidos;
+    $this->vista->tareamap=$tareas;
     //renderizar/--->>>>carpeta/hoja
-    $this->vista->render('pedido/consultarpedido');
+    $this->vista->render('tarea/consultartarea');
 
   }
   /*
     =========================================================================
-     AJAX Serie de Funcion Busca PEDIDO con parametros usando el metodo POST
+     AJAX Serie de Funcion Busca tarea con parametros usando el metodo POST
     =========================================================================
   */
-  function buscarPedido()//con parametro
+  function buscarTarea()//con parametro
   {
     //funciona
-    if(!$pedidos=$this->modelo->hallarPedido(['buscar'=> $_POST['buscado']])){
+    if(!$tareas=$this->modelo->hallarTarea(['buscar'=> $_POST['buscado']])){
       $this->vista->mensaje="
       <tr id='alerts'>
       <td colspan='10'>
@@ -49,36 +49,36 @@ class ConsultarPedido extends Controlador //se extiende al controlador en libs/c
       </div>
       </td>
       </tr>
-      ";//muestra mensaje de error si escribio mal el pedido a buscar
+      ";//muestra mensaje de error si escribio mal el tarea a buscar
     }
-    $this->vista->pedidomap=$pedidos;
-    $this->vista->render('pedido/consultarpedido'); //si el pedido exise lo muestra..
+    $this->vista->tareamap=$tareas;
+    $this->vista->render('tarea/consultartarea'); //si el tarea exise lo muestra..
 
   }
   /*
     ===============================================
-     Funcion VISUALIZAR PEDIDOS USANDO PARAMETRROS
+     Funcion VISUALIZAR tareaS USANDO PARAMETRROS
     ===============================================
   */
   //para visualizar
-  function verPedido($parametro=null)//con parametro
+  function verTarea($parametro=null)//con parametro
   {
     //se coje el primer puesto del parametro
-    $id_pedido=$parametro[0];//asiganar id
+    $id_tarea=$parametro[0];//asiganar id
     //var= estae modelo con la funcion darPorId(paraemtro);
-    $pedidos=$this->modelo->darPorId($id_pedido);
-    $detalles=$this->modelo->buscarDetallePedido($id_pedido);
+    $tareas=$this->modelo->darPorId($id_tarea);
+    $detalles=$this->modelo->buscarDetalleTarea($id_tarea);
     //sessiones
     session_start();
     //creamos una session, con el contenido del map parametro
-    $_SESSION['id_pedido']=$pedidos->id_pedido;
+    $_SESSION['id_tarea']=$tareas->id_tarea;
     //pasamos a vista materia
-    $this->vista->pedido= $pedidos;
+    $this->vista->tarea= $tareas;
     $this->vista->detalle= $detalles;
 
     //Enviamos en vista un mensaje vacio
     //renderizamos
-    $this->vista->render('pedido/verpedido');
+    $this->vista->render('tarea/vertarea');
 
   }
 

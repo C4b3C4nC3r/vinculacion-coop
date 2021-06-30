@@ -43,7 +43,7 @@
   <form id="formulario_tarea">
     <div class="form-row">
   <!--id_pedido-->
-    <div class="form-group col-md-4"  id="">
+    <div class="form-group col-md-6"  id="">
         <label for="id_pedido">Pedido</label>
         <select name="id_pedido" title="Agrege el detalle" id="id_pedido"  class="form-control" required>
           <option value="">Elija El Pedido</option>
@@ -60,7 +60,7 @@
         <p class="validarcompletado">*Campo Completado*</p>
       </div>
       <!--id_soscio-->
-      <div class="form-group col-md-4"  id="">
+      <div class="form-group col-md-6"  id="">
         <label for="id_socio">Socio</label>
         <select name="id_socio" title="Agrege el detalle" id="id_socio"  class="form-control" required>
           <option value="">Elija El Socio</option>
@@ -77,14 +77,14 @@
         <p class="validarcompletado">*Campo Completado*</p>
       </div>
       <!--fecha_asignacion-->
-      <div class="form-group col-md-4"  id="formulario_fecha">
+      <div class="form-group col-md-6"  id="formulario_fecha">
         <label for="fecha_asignacion">Fecha tarea</label>
         <input name="fecha_asignacion"  title="Agrege el detalle" type="date" class="form-control" id="fecha_asignacion" required>
         <p  class="validar">*Campo Obligatorio...*</p>
         <p class="validarcompletado">*Campo Completado*</p>
       </div>
       <!--fecha_entrega-->
-      <div class="form-group col-md-4"  id="formulario_fecha">
+      <div class="form-group col-md-6"  id="formulario_fecha">
         <label for="fecha_entrega">Fecha Entrega</label>
         <input name="fecha_entrega"  title="Agrege el detalle" type="date" class="form-control" id="fecha_entrega" required>
         <p  class="validar">*Campo Obligatorio...*</p>
@@ -92,11 +92,11 @@
       </div>
 
   </form>
-  <div class="">
+            
   <?php
     require 'detalle_tarea.php';
    ?>
- </div>
+
  
  <div class="form-group col-12">
    <button disabled type="submit" id="save" class="btn btn-primary">Guardar</button>
