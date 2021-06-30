@@ -176,6 +176,9 @@
                         <h6 class="collapse-header">Registros</h6>
                         <a class="collapse-item" href="<?php echo constant('URL'); ?>socio">Registrar Socio</a>
                         <a class="collapse-item" href="<?php echo constant('URL'); ?>consultarsocio">Consultar Socios</a>
+                        <a class="collapse-item" href="<?php echo constant('URL'); ?>tarea">Asignar Tareas</a>
+                        <a class="collapse-item" href="<?php echo constant('URL'); ?>consultartarea">Consultar Tareas</a>
+                        
                     </div>
                 </div>
             </li>

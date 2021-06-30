@@ -209,4 +209,28 @@ class SalidaMaterialMap{
   public $fecha;
   public $estado;
 }
+class TareaMap
+{
+  public $id_tarea;
+  public $id_socio;
+  public $fecha_asignacion;
+  public $fecha_entrega;
+  public $id_pedido;
+  //public $cantidad;
+  public $estado;
+
+}
+
+class DetalleTareaMap
+{
+  public $id_temporal;
+  public $id_producto;
+  public $id_usuario;
+  public $id_tarea;
+  public $producto;
+  public $codigo_producto;
+  public $cantidad;
+  public $id_detalle_tarea;
+
+}
 ?>
