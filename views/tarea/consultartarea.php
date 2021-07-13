@@ -13,11 +13,10 @@ $url = constant('URL') . "consultartarea/buscarTarea"; //ruta para enviarle a la
       <table class="table table-bordered order-table" id="dataTable" width="100%" cellspacing="0">
         <thead>
           <tr style="text-align: center;">
-            <th>Tarea N°</th>
-            <th>Socio</th>
-            <th>Fecha Asignacion</th>
-            <th>Fecha Entrega</th>
-            <th>Estado</th>
+            <th>Fecha Limite</th>
+            <th>N° Pedido</th>
+            <th>Cliente</th>
+            <th>Socios</th>
           </tr>
         </thead>
         <tbody id="tbody-tarea">
@@ -25,19 +24,17 @@ $url = constant('URL') . "consultartarea/buscarTarea"; //ruta para enviarle a la
 
           //inversa
           foreach ($this->tareamap as $row) {
-            $obj = new TareaMap(); //
+            $obj = new PedidoMap(); //
             $obj = $row;
           ?>
             <tr class="trow" style="text-align: center;" id="fila-<?php echo $obj->id_tarea ?>">
               <!--REFERENCIA PADRE-->
-              <td><?php echo $obj->id_tarea; ?></td>
-              <td><?php echo $obj->id_socio; ?></td>
-              <td><?php echo $obj->fecha_asignacion; ?></td>
-              <td><?php echo $obj->fecha_entrega; ?></td>
-              <td><?php echo $obj->estado; ?></td>
+              <td><?php echo $obj->fecha_salida; ?></td>
+              <td><?php echo $obj->id_pedido; ?></td>
+              <td><?php echo $obj->id_cliente; ?></td>
                 <td>
                   <!-- Button trigger modal -->
-                  <a class="btn btn-outline-primary" href="<?php echo constant('URL') ?>consultartarea/verTarea/<?php echo $obj->id_tarea ?>">
+                  <a class="btn btn-outline-primary" href="<?php echo constant('URL') ?>consultartarea/socio/<?php echo $obj->id_pedido ?>">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                       <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
                       <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />

@@ -1,7 +1,8 @@
 <?php
 
 
-class ConsultarTarea extends Controlador //se extiende al controlador en libs/controller
+
+class ConsultarTarea extends Controlador//se extiende al controlador en libs/controller
 {
   /*
     ==========================================================
@@ -81,6 +82,16 @@ class ConsultarTarea extends Controlador //se extiende al controlador en libs/co
     $this->vista->render('tarea/vertarea');
 
   }
+  function socio($parametro= null)
+  {
+    session_start();
+    $_SESSION["id_pedido"]=$parametro[0];
+    $sociosalidamateriales=$this->modelo->hallarSocioTarea(['id_pedido'=>$parametro[0]]);
+      
+    $this->vista->salidamaterialmap=$sociosalidamateriales;
 
+    $this->vista->render('tarea/socio');
+      
+  }
 }
  ?>

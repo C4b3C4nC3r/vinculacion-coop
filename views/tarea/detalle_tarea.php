@@ -23,7 +23,7 @@ DETALLE_INGRESO
     <!--Formulario para el ingreso de detalle tarea/detalle-->
     <tr id="formulariorow" style="text-align:center;">
 
-      <form id="formulario_detalle_tarea">
+      <form  id="formulario_detalle_tarea">
       <td>
         <!--ID_MATERIAL-->
         <select name="id_producto" id="id_producto" class="form-control" required>

@@ -53,7 +53,7 @@
             $obj = new PedidoMap();
             $obj=$row;
            ?>
-           <option value="<?php echo $obj->id_pedido ?>"><?php echo "$obj->id_pedido $obj->id_cliente"; ?></option>
+           <option value="<?php echo $obj->id_pedido ?>"><?php echo "$obj->id_pedido - $obj->id_cliente"; ?></option>
          <?php } ?>
         </select>
         <p  class="validar">*Campo Obligatorio...*</p>

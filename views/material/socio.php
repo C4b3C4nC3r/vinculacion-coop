@@ -24,6 +24,7 @@ session_start();
           </h4>
         
           <tr style="text-align: center;">
+            <th> Cédula</th>
             <th>Socios</th>
             <th>Materiales</th>
           </tr>
@@ -38,6 +39,7 @@ session_start();
           ?>
             <tr class="trow" style="text-align: center;" id="fila-<?php echo $obj->id_salida_material ?>">
               <!--REFERENCIA PADRE-->
+              <td><?php echo $obj->cedula_socio; ?></td>
               <td><?php echo $obj->id_socio; ?></td>
                 <td>
                   <!-- Button trigger modal -->

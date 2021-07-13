@@ -19,18 +19,19 @@ class ConsultarTareaModel extends Modelo //nos estnendemos al modelo de libs/mod
     $items=[];//arreglovacio
     //si funciona
     try {
-      $consulta=$this->db->connect()->query("SELECT t.*,s.`nombre` FROM tarea t,socio s WHERE t.`estado`='activo' AND t.`id_socio`=s.`id_socio` ORDER BY t.`id_tarea` DESC");//consulta sencilla
+      $consulta=$this->db->connect()->query("SELECT p.*,c.`nombre` AS 'cliente' FROM pedido p,cliente c WHERE  p.`estado`='activo' AND p.`id_cliente`=c.`id_cliente` ORDER BY p.`id_pedido` DESC");//consulta sencilla
       //$contador=$consulta->rowCount();//cuenta las filas
       while ($row=$consulta->fetch()) {//while, la fila que contiene al array que tare el fetch al vincularse con la consulta
         //$contador=$row->rowCount();
-        $item= new TareaMap();//objeto
-        $item->id_tarea=$row['id_tarea'];//propiedades
-        $item->id_socio=$row['nombre'];
+        $item= new PedidoMap();//objeto
+        //valores del array<-$row
+        //$item->id_salida_material=$row['id_salida_material'];//propiedades
+        //$item->id_socio="$row[nombre] $row[apellido] ";
         $item->id_pedido=$row['id_pedido'];
-        $item->fecha_asignacion=$row['fecha_asignacion'];
-        $item->fecha_entrega=$row['fecha_entrega'];
-        $item->estado=$row['estado'];
-        //$contador=$contador+1;
+        $item->id_cliente=$row['cliente'];
+        $item->fecha_entrada=$row['fecha_entrada'];
+        $item->fecha_salida=$row['fecha_salida'];
+
         //ingresar en un arreglo un nuevo valor
         array_push($items,$item);//
       }
@@ -123,6 +124,38 @@ class ConsultarTareaModel extends Modelo //nos estnendemos al modelo de libs/mod
       return $items;
     } catch (PDOException $e) {
       return [];
+    }
+  }
+  //==============================================================
+  public function hallarSocioTarea($datos)
+  {
+    $items=[];//arreglovacio
+    //si funciona
+    $consulta=$this->db->connect()->prepare("SELECT t.*,s.`nombre`,s.`apellido`,s.`cedula` FROM tarea t, socio s WHERE t.`id_pedido`=:id_pedido AND t.`id_socio`=s.`id_socio` ORDER BY t.`fecha_asignacion` DESC");//consulta sencilla
+
+    try {
+      $consulta->execute(['id_pedido'=>$datos['id_pedido']]);
+      //$contador=$consulta->rowCount();//cuenta las filas
+      while ($row=$consulta->fetch()) {//while, la fila que contiene al array que tare el fetch al vincularse con la consulta
+        //$contador=$row->rowCount();
+        $item= new TareaMap();//objeto
+        //valores del array<-$row
+        $item->id_tarea=$row['id_tarea'];//propiedades
+        $item->id_socio=" $row[apellido] $row[nombre]";
+        $item->cedula_socio="$row[cedula]";
+        //$item->id_pedido=$row['id_pedido'];
+        //$item->id_cliente=$row['cliente'];
+        $item->fecha_asignacion=$row['fecha_asignacion'];
+        $item->fecha_entrega=$row['fecha_entrega'];
+        $item->fecha_entregado=$row['fecha_entregado'];
+        //ingresar en un arreglo un nuevo valor
+        array_push($items,$item);//
+      }
+      //session_start();
+      //$_SESSION['limite']=$contador;
+      return $items;//sifunciona
+    } catch (PDOException $e) {//excepciones pero de PDO
+      return [];//nofunciona
     }
   }
 }

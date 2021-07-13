@@ -6,8 +6,7 @@ $url = constant('URL') . "consultarsalidamaterial/buscarSalidaMaterial"; //ruta 
 ?>
 <div  class="card shadow mb-1">
   <div class="card-header py-3">
-    <?php require 'views/info/buscar.php'; ?>
-    <?php require 'views/info/pagination.php'; ?>
+    <?php require 'views/info/buscar.php';require 'views/info/pagination.php'; ?>
 
     <div class="table-responsive">
       <table class="table table-bordered order-table" id="dataTable" width="100%" cellspacing="0">
@@ -15,6 +14,7 @@ $url = constant('URL') . "consultarsalidamaterial/buscarSalidaMaterial"; //ruta 
           <tr style="text-align: center;">
             <th>Fecha</th>
             <th>N° Pedido</th>
+            <th>Cliente</th>
             <th>Socios</th>
           </tr>
         </thead>
@@ -29,7 +29,8 @@ $url = constant('URL') . "consultarsalidamaterial/buscarSalidaMaterial"; //ruta 
             <tr class="trow" style="text-align: center;" id="fila-<?php echo $obj->id_salida_material ?>">
               <!--REFERENCIA PADRE-->
               <td><?php echo $obj->fecha; ?></td>
-              <td><?php echo "$obj->id_pedido-$obj->id_cliente" ?></td>
+              <td><?php echo $obj->id_pedido; ?></td>
+              <td><?php echo $obj->id_cliente;?></td>
               
                 <td>
                   <!-- Button trigger modal -->

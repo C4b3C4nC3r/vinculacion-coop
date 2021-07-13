@@ -120,7 +120,8 @@ class ConsultarSalidaMaterialModel extends Modelo //nos estnendemos al modelo de
         $item= new SalidaMaterialMap();//objeto
         //valores del array<-$row
         $item->id_salida_material=$row['id_salida_material'];//propiedades
-        $item->id_socio="$row[cedula] $row[apellido] $row[nombre]";
+        $item->id_socio=" $row[apellido] $row[nombre]";
+        $item->cedula_socio="$row[cedula]";
         //$item->id_pedido=$row['id_pedido'];
         //$item->id_cliente=$row['cliente'];
         $item->fecha=$row['fecha'];

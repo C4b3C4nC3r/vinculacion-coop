@@ -204,6 +204,7 @@ class DetalleMaterialMap
 class SalidaMaterialMap{
   public $id_salida_material;
   public $id_socio;
+  public $cedula_socio;
   public $id_pedido;
   public $id_cliente;
   public $fecha;
@@ -215,6 +216,7 @@ class TareaMap
   public $id_socio;
   public $fecha_asignacion;
   public $fecha_entrega;
+  public $fecha_entregado;
   public $id_pedido;
   //public $cantidad;
   public $estado;
