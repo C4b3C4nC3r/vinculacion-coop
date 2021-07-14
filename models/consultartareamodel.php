@@ -1,4 +1,7 @@
 <?php
+
+use PhpParser\Node\Stmt\TryCatch;
+
 include_once 'models/mapas.php';//mapeo y ovjeto material
 //include_once 'models/mapmaterial.php';//mapeo y ovjeto material
 class ConsultarTareaModel extends Modelo //nos estnendemos al modelo de libs/model
@@ -18,31 +21,67 @@ class ConsultarTareaModel extends Modelo //nos estnendemos al modelo de libs/mod
   {
     $items=[];//arreglovacio
     //si funciona
+
+
     try {
-      $consulta=$this->db->connect()->query("SELECT p.*,c.`nombre` AS 'cliente' FROM pedido p,cliente c WHERE  p.`estado`='activo' AND p.`id_cliente`=c.`id_cliente` ORDER BY p.`id_pedido` DESC");//consulta sencilla
-      //$contador=$consulta->rowCount();//cuenta las filas
+      $consulta=$this->db->connect()->query("SELECT DISTINCT p.*,c.`nombre` AS 'cliente'FROM pedido p,cliente c,tarea t 
+                                              WHERE  p.`estado`='activo' AND p.`id_cliente`=c.`id_cliente` AND p.`id_pedido`=t.`id_pedido`
+                                              ORDER BY p.`id_pedido` DESC");//consulta sencilla
       while ($row=$consulta->fetch()) {//while, la fila que contiene al array que tare el fetch al vincularse con la consulta
-        //$contador=$row->rowCount();
         $item= new PedidoMap();//objeto
-        //valores del array<-$row
-        //$item->id_salida_material=$row['id_salida_material'];//propiedades
-        //$item->id_socio="$row[nombre] $row[apellido] ";
         $item->id_pedido=$row['id_pedido'];
         $item->id_cliente=$row['cliente'];
         $item->fecha_entrada=$row['fecha_entrada'];
         $item->fecha_salida=$row['fecha_salida'];
-
-        //ingresar en un arreglo un nuevo valor
+        $item->estado=$this->verificarEstado($row['id_pedido']);  
         array_push($items,$item);//
       }
-      //session_start();
-      //$_SESSION['limite']=$contador;
       return $items;//sifunciona
     } catch (PDOException $e) {//excepciones pero de PDO
       return [];//nofunciona
     }
   }
+  public function verificarEstado($id)
+  {
+    $estadoactua=[];
+    $consulta=$this->db->connect()->prepare("SELECT fecha_entregado FROM tarea WHERE id_pedido=:id_pedido ");
+    try {
+      $consulta->execute(["id_pedido"=>$id]);
+      while($row=$consulta->fetch()) {
+        # code...
+        $estadoactua=$row["fecha_entregado"];
+      }
+      if ($estadoactua!=null) {
+        return "listo";
+      }
+    } catch (PDOException $e) {
+      //throw $th;
+        $estado='falta';
+        return $estado;
 
+      
+    }
+  }
+  public function verificarEstadoEspecifico($datos)
+  {
+    $estadoactua=[];
+    $consulta=$this->db->connect()->prepare("SELECT fecha_entregado FROM tarea WHERE id_socio=:id_socio AND id_pedido=:id_pedido");
+    try {
+      $consulta->execute(["id_socio"=>$datos["id_socio"],"id_pedido"=>$datos["id_pedido"]]);
+      while($row=$consulta->fetch()) {
+        # code...
+        $estadoactua=$row["fecha_entregado"];
+      }
+      if ($estadoactua!=null) {
+        return "listo";
+      }
+    } catch (PDOException $e) {
+      //throw $th;
+        $estado='falta';
+        return $estado;
+
+    }
+  }
   /*
     ==================================================================================================================
      Funcion hallarTarea con arreglos vacios | Realizara una consulta en la DB y ordenara el resultado por su ID ASC
@@ -138,7 +177,7 @@ class ConsultarTareaModel extends Modelo //nos estnendemos al modelo de libs/mod
     //consulta de socios
     
     //si funciona
-    $consulta=$this->db->connect()->prepare("SELECT t.*,s.`nombre`,s.`apellido`,s.`cedula` FROM tarea t, socio s WHERE t.`id_pedido`=:id_pedido AND t.`id_socio`=s.`id_socio` ORDER BY t.`fecha_asignacion` DESC");//consulta sencilla
+    $consulta=$this->db->connect()->prepare("SELECT DISTINCT s.* FROM socio s,tarea t WHERE t.`id_pedido`=:id_pedido AND t.`id_socio`=s.`id_socio` ORDER BY t.`fecha_asignacion` DESC");//consulta sencilla
 
     try {
       $consulta->execute(['id_pedido'=>$datos['id_pedido']]);
@@ -151,6 +190,8 @@ class ConsultarTareaModel extends Modelo //nos estnendemos al modelo de libs/mod
         $item->nombre=$row['nombre'];
         $item->apellido=$row['apellido'];
         $item->cedula=$row['cedula'];
+        $item->estado=$this->verificarEstadoEspecifico(['id_socio'=>$row['id_socio'],'id_pedido'=>$datos['id_pedido']]);  
+        
         //ingresar en un arreglo un nuevo valor
         array_push($items,$item);//
       }

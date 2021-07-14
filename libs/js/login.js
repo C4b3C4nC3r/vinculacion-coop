@@ -572,7 +572,12 @@ $('#formulario_detalle_pedido').ready(darDetallePedido);
   //FORMULARIO DE TAREA
 
 //mostrar tabla
-$('#formulario_detalle_tarea').ready(darDetallePedido); 
+$('#formulario_detalle_tarea').ready(
+  darDetalleTarea(),
+  $('#id_producto').click("keyup keydown",function (){
+    $('#agregar').attr("disabled",false);
+  })
+  );
 
   $('#formulario_tarea').submit(function(e) {
     e.preventDefault();
@@ -609,6 +614,7 @@ $('#formulario_detalle_tarea').ready(darDetallePedido);
   $('#botonCancelarTarea').click(cancelarDetalleTarea);//cancelar
 
 //mostrar tabla
+  
   //DETALLE PEDIDO
   $('#formulario_detalle_tarea').submit(function(e) {
     const url='http://localhost/coop/tarea/detalle';

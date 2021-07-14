@@ -162,28 +162,17 @@ class TareaModel extends Modelo//extiende a modelo
     $consulta=$this->db->connect()->prepare("INSERT INTO tarea (id_socio,id_pedido,fecha_asignacion,fecha_entrega)VALUES (:id_socio,:id_pedido,:fecha_asignacion,:fecha_entrega)");
     try {
       $consulta->execute(['id_socio'=>$datos['id_socio'],'id_pedido'=>$datos['id_pedido'],'fecha_asignacion'=>$datos['fecha_asignacion'],'fecha_entrega'=>$datos['fecha_entrega']]);
-      return true;
-    } catch (PDOException $e) {
-      return false;
-    }
-
-  }
-  //select el tarea
-  public function darId($datos)
-  {
-    //return su id
-    $item = new TareaMap();
-    $consulta=$this->db->connect()->prepare("SELECT * FROM tarea WHERE id_socio=:id_socio AND id_pedido=:id_pedido");
-    try {
-      $consulta->execute(['id_socio'=>$datos['id_socio'],'id_pedido'=>$datos['id_pedido']]);
+      $consulta=$this->db->connect()->query("SELECT id_tarea FROM tarea ORDER BY id_tarea DESC LIMIT 1 ");    
       if ($row=$consulta->fetch()) {
-        $item->id_tarea=$row['id_tarea'];
+        $obj=['id_tarea'=>$row['id_tarea']];
+        return $obj;
       }
-      return $item;
     } catch (PDOException $e) {
       return [];
     }
+
   }
+  
   public function insertarDetalleTarea($items)
   {
     //insert

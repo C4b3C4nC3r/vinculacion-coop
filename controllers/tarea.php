@@ -34,21 +34,21 @@ class Tarea extends Controlador //se extiende al controlador en libs/controller
   {
     $url=constant('URL').'consultartarea';//ruta
     if (!empty($_POST['id_socio'])&&!empty($_POST['fecha_asignacion'])&&!empty($_POST['fecha_entrega'])&&!empty($_POST['id_pedido'])) {
-        if ($this->modelo->insertarTarea(['id_socio'=>$_POST['id_socio'],'fecha_asignacion'=>$_POST['fecha_asignacion'],'fecha_entrega'=>$_POST['fecha_entrega'],'id_pedido'=>$_POST['id_pedido']])) {
-          //si return true
-          if($tarea=$this->modelo->darId(['id_socio'=>$_POST['id_socio'],'id_pedido'=>$_POST['id_pedido']])){
-            //retornamos un obj
-            if (!empty($tarea->id_tarea)) {
-              $id=$tarea->id_tarea;
-            }else{
-              die("
-              <div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                  <strong>Esta Al Limite</strong> Problemas del leght en base de datos
-                   <b>Revisar El codigo de Factura</b>
-              </div>
-              "
-              );
-            }
+      //echo "$_POST[id_socio] $_POST[fecha_asignacion] $_POST[fecha_entrega] $_POST[id_pedido]";
+        $obj=[];
+        if ($obj=$this->modelo->insertarTarea(['id_socio'=>$_POST['id_socio'],'fecha_asignacion'=>$_POST['fecha_asignacion'],'fecha_entrega'=>$_POST['fecha_entrega'],'id_pedido'=>$_POST['id_pedido']])) {
+          if ($obj!=[ ]) {
+            $id=$obj['id_tarea'];
+          }else{
+            die("
+            <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                <strong>Esta Al Limite</strong> Problemas del leght en base de datos
+                 <b>Revisar El codigo de Factura</b>
+            </div>
+            "
+            );
+          }
+          
             if ($this->detalleTarea(['id_tarea'=>$id])) {
               //mensaje
               ?><div class='alert alert-info alert-dismissible fade show' role='alert'>
@@ -62,15 +62,10 @@ class Tarea extends Controlador //se extiende al controlador en libs/controller
                 </div>
               <?php
             }
-          }else{
-            ?><div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                  <strong>Error</strong>  No Se ha encontrado el Ingreso del tarea
-              </div>
-            <?php
-          }
+        
         }else{
           ?><div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                <strong>Datos Vacios</strong>
+                <strong>Datos Vacios 2</strong>
             </div>
           <?php
 
@@ -78,7 +73,7 @@ class Tarea extends Controlador //se extiende al controlador en libs/controller
     
     }else{
       ?><div class='alert alert-danger alert-dismissible fade show' role='alert'>
-            <strong>Datos vacios</strong>
+            <strong>Datos vacios 1</strong>
          </div>
       <?php
     }
