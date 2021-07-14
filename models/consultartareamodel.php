@@ -94,6 +94,11 @@ class ConsultarTareaModel extends Modelo //nos estnendemos al modelo de libs/mod
         $item->id_socio=$row['nombre'];
         $item->fecha_asignacion=$row['fecha_asignacion'];
         $item->fecha_entrega=$row['fecha_entrega'];
+        if ($row['fecha_entregado']==null) {
+          $item->fecha_entregado='pendiente';
+        }else{
+          $item->fecha_entregado=$row['fecha_entregado'];
+        }
         $item->id_pedido="$row[id_pedido]-$row[cliente]";
         $item->estado=$row['estado'];
         // regresar objeto
@@ -130,6 +135,8 @@ class ConsultarTareaModel extends Modelo //nos estnendemos al modelo de libs/mod
   public function hallarSocioTarea($datos)
   {
     $items=[];//arreglovacio
+    //consulta de socios
+    
     //si funciona
     $consulta=$this->db->connect()->prepare("SELECT t.*,s.`nombre`,s.`apellido`,s.`cedula` FROM tarea t, socio s WHERE t.`id_pedido`=:id_pedido AND t.`id_socio`=s.`id_socio` ORDER BY t.`fecha_asignacion` DESC");//consulta sencilla
 
@@ -138,16 +145,12 @@ class ConsultarTareaModel extends Modelo //nos estnendemos al modelo de libs/mod
       //$contador=$consulta->rowCount();//cuenta las filas
       while ($row=$consulta->fetch()) {//while, la fila que contiene al array que tare el fetch al vincularse con la consulta
         //$contador=$row->rowCount();
-        $item= new TareaMap();//objeto
+        $item= new SocioMap();//objeto
         //valores del array<-$row
-        $item->id_tarea=$row['id_tarea'];//propiedades
-        $item->id_socio=" $row[apellido] $row[nombre]";
-        $item->cedula_socio="$row[cedula]";
-        //$item->id_pedido=$row['id_pedido'];
-        //$item->id_cliente=$row['cliente'];
-        $item->fecha_asignacion=$row['fecha_asignacion'];
-        $item->fecha_entrega=$row['fecha_entrega'];
-        $item->fecha_entregado=$row['fecha_entregado'];
+        $item->id_socio=$row['id_socio'];//propiedades
+        $item->nombre=$row['nombre'];
+        $item->apellido=$row['apellido'];
+        $item->cedula=$row['cedula'];
         //ingresar en un arreglo un nuevo valor
         array_push($items,$item);//
       }
@@ -157,6 +160,52 @@ class ConsultarTareaModel extends Modelo //nos estnendemos al modelo de libs/mod
     } catch (PDOException $e) {//excepciones pero de PDO
       return [];//nofunciona
     }
+  }
+  public function tareaEspecifica($datos)
+  {
+    $items=[];//arreglovacio
+    //consulta de socios
+    
+    //si funciona
+    $consulta=$this->db->connect()->prepare("SELECT t.*,s.`nombre`, s.`apellido`, s.`cedula` FROM tarea t, socio s WHERE t.`id_pedido`=:id_pedido AND t.`id_socio`=:id_socio AND t.`id_socio`=s.`id_socio` ORDER BY t.`fecha_asignacion` DESC");//consulta sencilla
+
+    try {
+      $consulta->execute(['id_pedido'=>$datos['id_pedido'],'id_socio'=>$datos['id_socio']]);
+      //$contador=$consulta->rowCount();//cuenta las filas
+      while ($row=$consulta->fetch()) {//while, la fila que contiene al array que tare el fetch al vincularse con la consulta
+        //$contador=$row->rowCount();
+        $item= new TareaMap();//objeto
+        $item->id_tarea=$row['id_tarea'];//propiedades
+        $item->id_socio="$row[nombre] $row[apellido]";
+        $item->fecha_asignacion=$row['fecha_asignacion'];
+        $item->fecha_entrega=$row['fecha_entrega'];
+        if ($row['fecha_entregado']==null) {
+          # code...
+          $item->fecha_entregado='pendiente';
+        }else{
+          $item->fecha_entregado=$row['fecha_entregado'];
+        }
+        $item->id_pedido=$row['id_pedido'];
+        $item->estado=$row['estado'];
+        array_push($items,$item);//
+      }
+      //session_start();
+      //$_SESSION['limite']=$contador;
+      return $items;//sifunciona
+    } catch (PDOException $e) {//excepciones pero de PDO
+      return [];//nofunciona
+    }
+  }
+  public function insertarFechaEntrega($datos)
+  {
+    $consulta=$this->db->connect()->prepare("UPDATE tarea SET fecha_entregado=:fecha_entregado WHERE id_tarea=:id_tarea");
+    try {
+      $consulta->execute(["id_tarea"=>$datos["id_tarea"],"fecha_entregado"=>$datos["fecha_entregado"]]);
+      return true;
+    } catch (PDOException $e) {
+      return false;
+    }
+    
   }
 }
  ?>

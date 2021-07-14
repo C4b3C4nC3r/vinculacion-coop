@@ -86,12 +86,38 @@ class ConsultarTarea extends Controlador//se extiende al controlador en libs/con
   {
     session_start();
     $_SESSION["id_pedido"]=$parametro[0];
-    $sociosalidamateriales=$this->modelo->hallarSocioTarea(['id_pedido'=>$parametro[0]]);
+    $sociotarea=$this->modelo->hallarSocioTarea(['id_pedido'=>$parametro[0]]);
       
-    $this->vista->salidamaterialmap=$sociosalidamateriales;
+    $this->vista->tareamap=$sociotarea;
 
     $this->vista->render('tarea/socio');
       
+  }
+  
+  function tarea($parametro= null)
+  {
+    session_start();
+    // $id_pedido=$_SESSION["id_pedido"];
+    $_SESSION["id_socio"]=$parametro[0];
+    $tarea=$this->modelo->tareaEspecifica(['id_socio'=>$parametro[0],'id_pedido'=>$_SESSION['id_pedido']]);
+    $this->vista->tareamap=$tarea;
+    //$_SESSION["id_tarea"]=$tarea->id_tarea;
+    $this->vista->render('tarea/tarea');
+      
+  }
+  //anadir la respectiva fecha_entregada
+  function fechaTareaEntregada()
+  {
+    session_start();
+    if ($this->modelo->insertarFechaEntrega(['fecha_entregado'=>$_POST['fecha_entregado'], 'id_tarea'=>$_SESSION['id_tarea']])) {
+      $this->verTarea(['0'=>$_SESSION['id_tarea']]);
+    }else{
+      ?>
+      <div class='alert alert-warning alert-dismissible fade show' role='alert'>
+            <strong>HUbo un Problema</strong> a la hora de actualizar este registro.
+        </div>
+      <?php
+    }
   }
 }
  ?>

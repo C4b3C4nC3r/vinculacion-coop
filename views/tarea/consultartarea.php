@@ -27,7 +27,7 @@ $url = constant('URL') . "consultartarea/buscarTarea"; //ruta para enviarle a la
             $obj = new PedidoMap(); //
             $obj = $row;
           ?>
-            <tr class="trow" style="text-align: center;" id="fila-<?php echo $obj->id_tarea ?>">
+            <tr class="trow" style="text-align: center;" id="fila-<?php echo $obj->id_pedido ?>">
               <!--REFERENCIA PADRE-->
               <td><?php echo $obj->fecha_salida; ?></td>
               <td><?php echo $obj->id_pedido; ?></td>
